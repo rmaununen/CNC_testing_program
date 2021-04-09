@@ -9,9 +9,14 @@ import numpy as np
 x = 320
 y = 320
 FPS = 30
-speed_h = 8
-speed_v = 10
-r = 10
+speed_h = 5
+speed_v = 5
+r = 4
+down = False
+trace = []
+b_time = 0
+trace_length = 100
+color_grad = round(200/trace_length)
 screen_width, screen_height = 720, 600
 run = True
 t = pygame.time.Clock()
@@ -34,6 +39,10 @@ def print_text(message, x, y, font_col, font_type, font_size):
 def draw_background(image):
     win.fill((255, 255, 255))
     pygame.draw.rect(win, (200, 200, 200), (round(screen_width/20), round(screen_height/10), round(screen_width/2), np.sqrt(2)*round(screen_width/2)))
+    for i in trace:
+        pygame.draw.circle(win, (i[2], i[3], i[4]), (i[0], i[1]), r)
+    if down:
+        pygame.draw.circle(win, (255, 0, 0), (round(screen_width/2), round(screen_width/20)), r)
     pygame.draw.circle(win, (0, 0, 0), (x, y), r)
     #win.blit(bg, (0, 0))
     #win.blit(pl_stand, (x, y))
@@ -49,15 +58,38 @@ while run == True:
     drawing = True
     #########################################
     if drawing:
+        moving = False
         #left and right
         if pressed[pygame.K_LEFT] and x>round(screen_width/20)+r:
             x-= speed_h
+            moving = True
         elif pressed[pygame.K_RIGHT] and x<round(screen_width/20 + screen_width/2)-r:
             x+= speed_h
+            moving = True
         if pressed[pygame.K_UP] and y>round(screen_width/10):
             y-= speed_v
+            moving = True
         elif pressed[pygame.K_DOWN] and y<round((screen_width/10) + np.sqrt(2)*round(screen_width/2))-2*r:
             y+= speed_v
+            moving = True
+        if a_time-b_time>0.1:
+            if pressed[pygame.K_SPACE]:
+                if down == True:
+                    down = False
+                else:
+                    down = True
+            b_time = float(pygame.time.get_ticks() / 1000)
+        if down and len(trace)<trace_length:
+            position = [x, y, 200, 0, 0]
+            trace.append(position)
+        elif down and len(trace)>=trace_length and moving:
+            trace.pop(0)
+            position = [x, y, 200, 0, 0]
+            trace.append(position)
+        if down and moving:
+            for i in trace:
+                i[3] = i[3] + color_grad
+                i[4] = i[4] + color_grad
     #########################################
     # CALLING THE DRAWER TO DRAW A FRAME
     draw_background(0)
