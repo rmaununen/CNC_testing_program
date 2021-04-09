@@ -9,10 +9,12 @@ import numpy as np
 x = 320
 y = 320
 FPS = 30
-speed_h = 5
-speed_v = 5
-r = 4
+speed_h = 10
+speed_v = 10
+r = 5
 down = False
+pressed_space = False
+single_point_done = False
 trace = []
 b_time = 0
 trace_length = 100
@@ -42,11 +44,12 @@ def draw_background(image):
     for i in trace:
         pygame.draw.circle(win, (i[2], i[3], i[4]), (i[0], i[1]), r)
     if down:
-        pygame.draw.circle(win, (255, 0, 0), (round(screen_width/2), round(screen_width/20)), r)
+        pygame.draw.rect(win, (255, 100, 100), (round(3*screen_width/4), round(screen_height/20), round(screen_width/10), round(screen_height/20)))
+        print_text('contact', round(3*screen_width/4)+5, round(screen_height/20)+5, (0, 0, 0), "fonts/Pixeboy.ttf", 20)
     pygame.draw.circle(win, (0, 0, 0), (x, y), r)
     #win.blit(bg, (0, 0))
     #win.blit(pl_stand, (x, y))
-    print_text(str(a_time), round(screen_width/30), round(screen_width/30), (0, 0, 0), "fonts/Pixeboy.ttf", 20)
+    print_text(str(a_time), round(screen_width/30), round(screen_height/30), (0, 0, 0), "fonts/Pixeboy.ttf", 20)
     pygame.display.update()
 
 while run == True:
@@ -60,36 +63,48 @@ while run == True:
     if drawing:
         moving = False
         #left and right
-        if pressed[pygame.K_LEFT] and x>round(screen_width/20)+r:
+        if pressed[pygame.K_LEFT] and x>=round(screen_width/20)+r+speed_h:
             x-= speed_h
             moving = True
-        elif pressed[pygame.K_RIGHT] and x<round(screen_width/20 + screen_width/2)-r:
+        elif pressed[pygame.K_RIGHT] and x<=round(screen_width/20 + screen_width/2)-r-speed_h:
             x+= speed_h
             moving = True
-        if pressed[pygame.K_UP] and y>round(screen_width/10):
+        if pressed[pygame.K_UP] and y>=round(screen_height/10)+r+speed_v:
             y-= speed_v
             moving = True
-        elif pressed[pygame.K_DOWN] and y<round((screen_width/10) + np.sqrt(2)*round(screen_width/2))-2*r:
+        elif pressed[pygame.K_DOWN] and y<round((screen_height/10) + np.sqrt(2)*round(screen_width/2))-r-speed_v:
             y+= speed_v
             moving = True
-        if a_time-b_time>0.1:
-            if pressed[pygame.K_SPACE]:
-                if down == True:
-                    down = False
-                else:
-                    down = True
-            b_time = float(pygame.time.get_ticks() / 1000)
-        if down and len(trace)<trace_length:
+
+        if moving:
+            single_point_done = False
+        if pressed[pygame.K_SPACE] and not pressed_space:
+            if down == True:
+                down = False
+            else:
+                down = True
+            pressed_space = True
+        if not pressed[pygame.K_SPACE]:
+            pressed_space = False
+        if down and len(trace)<trace_length and moving:
             position = [x, y, 200, 0, 0]
             trace.append(position)
         elif down and len(trace)>=trace_length and moving:
             trace.pop(0)
             position = [x, y, 200, 0, 0]
             trace.append(position)
+        elif down and not moving and not single_point_done:
+            if len(trace)>=trace_length:
+                trace.pop(0)
+            position = [x, y, 200, 0, 0]
+            trace.append(position)
+            single_point_done = True
         if down and moving:
             for i in trace:
                 i[3] = i[3] + color_grad
                 i[4] = i[4] + color_grad
+        if pressed[pygame.K_BACKSPACE]:
+            trace = []
     #########################################
     # CALLING THE DRAWER TO DRAW A FRAME
     draw_background(0)
