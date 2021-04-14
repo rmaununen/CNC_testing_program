@@ -2,7 +2,7 @@ String test;
 const int dirPin = 4;
 const int stepPin = 5;
 const int stepsPerRevolution = 200;
-const int stepWidth = 800; //between 300 and 4000
+const int stepWidth = 1800; //between 300 and 4000
 
 void setup()
 {
@@ -17,7 +17,7 @@ if (Serial.available() > 0) {
   
   if (test == "1") {
     digitalWrite(dirPin, HIGH); // CW
-    for(int x = 0; x < 10*stepsPerRevolution; x++)
+    for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
       digitalWrite(stepPin, HIGH);
       delayMicroseconds(stepWidth);

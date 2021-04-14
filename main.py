@@ -2,7 +2,7 @@ import pygame
 import serial
 import time
 import numpy as np
-serialcom = serial.Serial('/dev/cu.usbserial-A50285BI', baudrate=28800, timeout=1) #Change port name to the one you are using
+#serialcom = serial.Serial('/dev/cu.usbserial-A50285BI', baudrate=28800, timeout=1) #Change port name to the one you are using
 
 
 ####################### INITIAL VALUES:
@@ -11,6 +11,8 @@ y = 320
 FPS = 30
 speed_h = 6
 speed_v = 6
+motor_speed = 1
+delta_motor_speed = 0.01
 r = 5
 r1 = 9
 down = False
@@ -44,17 +46,38 @@ def print_text(message, x, y, font_col, font_type, font_size):
     text = font_type1.render(message, True, font_col)
     win.blit(text, (x, y))
 
+def draw_button(direction, xb, yb):
+    global motor_speed, delta_motor_speed
+    width = 30
+    height = 20
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    if (xb < mouse[0] < xb + width) and (yb < mouse[1] < yb + height):
+        pygame.draw.rect(win, (210, 160, 160), (xb, yb, width, height))
+        if click[0] == 1:
+            pygame.time.delay(30)
+            if direction == 'plus':
+                motor_speed += delta_motor_speed
+            else:
+                motor_speed -= delta_motor_speed
+    else:
+        pygame.draw.rect(win, (160, 160, 160), (xb, yb, width, height))
+    if direction == 'plus':
+        print_text('+', xb+0.35*width, yb, (0, 0, 0), "fonts/Roboto.ttf", 20)
+    else:
+        print_text('-', xb+0.35*width, yb-height/2, (0, 0, 0), "fonts/Roboto.ttf", 35)
+
 def draw_background(image):
     win.fill((255, 255, 255))
     pygame.draw.rect(win, (200, 200, 200), (round(screen_width/20), round(screen_height/10), round(screen_width/2), np.sqrt(2)*round(screen_width/2)))
     for i in trace:
         pygame.draw.circle(win, (i[2], i[3], i[4]), (i[0], i[1]), r)
     if down:
-        pygame.draw.rect(win, (255, 100, 100), (round(0.6*screen_width), round(screen_height/20), round(screen_width/10), round(screen_height/20)))
+        pygame.draw.rect(win, (255, 50, 50), (round(0.6*screen_width), round(screen_height/20), round(screen_width/10), round(screen_height/20)))
         print_text('contact', round(0.6*screen_width)+5, round(screen_height/20)+5, (0, 0, 0), "fonts/Roboto.ttf", 20)
-    pygame.draw.rect(win, (180, 255, 180), (round(0.72 * screen_width), round(screen_height / 20), round(screen_width / 10), round(screen_height / 20)))
+    pygame.draw.rect(win, (220, 255, 220), (round(0.72 * screen_width), round(screen_height / 20), round(screen_width / 10), round(screen_height / 20)))
     print_text('reset 1', round(0.72 * screen_width) + 5, round(screen_height / 20) + 5, (0, 0, 0), "fonts/Roboto.ttf", 20)
-    pygame.draw.rect(win, (180, 255, 180), (round(0.84 * screen_width), round(screen_height / 20), round(screen_width / 10), round(screen_height / 20)))
+    pygame.draw.rect(win, (220, 255, 220), (round(0.84 * screen_width), round(screen_height / 20), round(screen_width / 10), round(screen_height / 20)))
     print_text('reset 2', round(0.84 * screen_width) + 5, round(screen_height / 20) + 5, (0, 0, 0), "fonts/Roboto.ttf", 20)
     pygame.draw.circle(win, (0, 0, 0), (x, y), r)
     print_text(str(a_time), round(screen_width/30), round(screen_height/30), (0, 0, 0), "fonts/Roboto.ttf", 20)
@@ -64,8 +87,8 @@ def draw_background(image):
     print_text('Motor 2', round(0.6*screen_width), round(0.69*screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
     print_text('Motor 3', round(0.6*screen_width), round(0.78*screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
     print_text('Motor 4', round(0.6*screen_width), round(0.87*screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
-    print_text('x: ' + str(x) + ' p', round(0.6*screen_width), round(0.3*screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
-    print_text('y: ' + str(y) + ' p', round(0.6*screen_width), round(0.35*screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
+    print_text('x: ' + str(x) + ' p', round(0.6*screen_width), round(0.25*screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
+    print_text('y: ' + str(y) + ' p', round(0.6*screen_width), round(0.30*screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
     if move_right:
         pygame.draw.circle(win, (180, 180, 240), (round(3*screen_width/4), round(0.62*screen_height)), r1)
         pygame.draw.circle(win, (0, 0, 230), (round(3*screen_width/4)+round(screen_width/7), round(0.62 * screen_height)), r1)
@@ -101,6 +124,10 @@ def draw_background(image):
         pygame.draw.circle(win, (180, 180, 240), (round(3*screen_width/4)+round(screen_width/7), round(0.89 * screen_height)), r1)
     #win.blit(bg, (0, 0))
     #win.blit(pl_stand, (x, y))
+    print_text('Motor speed [rps]', round(0.56 * screen_width), round(0.4 * screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
+    draw_button('plus', round(0.95*screen_width), round(0.4*screen_height))
+    draw_button('minus', round(0.8*screen_width), round(0.4*screen_height))
+    print_text(str('{:.2f}'.format(round(motor_speed, 2))), round(0.87*screen_width), round(0.4*screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
     pygame.display.update()
 
 while run == True:
@@ -122,14 +149,14 @@ while run == True:
             x-= speed_h
             moving = True
             move_left = True
-            serialcom.write("2\n".encode())
+            #serialcom.write("2\n".encode())
         elif pressed[pygame.K_RIGHT] and x<=round(screen_width/20 + screen_width/2)-r-speed_h:
             x+= speed_h
             moving = True
             move_right = True
-            serialcom.write("1\n".encode())
-        else:
-            serialcom.write("0\n".encode())
+            #serialcom.write("1\n".encode())
+        #else:
+            #serialcom.write("0\n".encode())
         if pressed[pygame.K_UP] and y>=round(screen_height/10)+r+speed_v:
             y-= speed_v
             moving = True
@@ -175,6 +202,5 @@ while run == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-
 pygame.quit()
 serialcom.close()
