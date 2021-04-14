@@ -2,7 +2,7 @@ import pygame
 import serial
 import time
 import numpy as np
-#serialcom = serial.Serial('/dev/cu.usbserial-A50285BI', baudrate=28800, timeout=1) #Change port name to the one you are using
+serialcom = serial.Serial('/dev/cu.usbserial-A50285BI', baudrate=28800, timeout=1) #Change port name to the one you are using
 
 
 ####################### INITIAL VALUES:
@@ -149,14 +149,14 @@ while run == True:
             x-= speed_h
             moving = True
             move_left = True
-            #serialcom.write("2\n".encode())
+            serialcom.write("2\n".encode())
         elif pressed[pygame.K_RIGHT] and x<=round(screen_width/20 + screen_width/2)-r-speed_h:
             x+= speed_h
             moving = True
             move_right = True
-            #serialcom.write("1\n".encode())
-        #else:
-            #serialcom.write("0\n".encode())
+            serialcom.write("1\n".encode())
+        else:
+            serialcom.write("0\n".encode())
         if pressed[pygame.K_UP] and y>=round(screen_height/10)+r+speed_v:
             y-= speed_v
             moving = True
