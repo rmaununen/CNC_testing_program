@@ -4,7 +4,7 @@ This is a testing program for a CNC machine based on Arduino and 4 stepper motor
 # Installation
 0) Check if you have python modules installed: serial, pygame, numpy
 1) In controller.ino change the digital pins to the ones that you are using
-2) If you are using different stepper motors, check their number of steps per revolution (from the datasheet). Change this number in controller.ino. Also check the speed limits of your motors (look it up somewhere or determine experimentally)
+2) If you are using different stepper motors, check their number of steps per revolution (from the datasheet). Change this number in controller.ino. Also check the speed limits of your motors (look it up somewhere or determine experimentally) and change the corresponding variables in both controller.ino and main.py
 3) Download the firmware (controller.ino) to your Arduino
 4) In main.py change the port name to the one that you are using
 5) Run main.py
