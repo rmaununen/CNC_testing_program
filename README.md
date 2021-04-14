@@ -1,5 +1,5 @@
 # CNC testing program
-This is a testing program for a CNC machine based on Arduino and 4 stepper motors. Pygame module is used to create the testing interface. Serial module is used for communication with the controller. Designed for the following configuration: Arduino Nano, four Nema 17 (17HS4401) stepper motors, four A4988 drivers. However, it can also be used with different models of Arduino or stepper motors (check out the installation instructions). 
+This is a testing program for a CNC machine based on Arduino and 4 stepper motors. With this program you can manually control the rotation (both speed and direction) of stepper motors in real time. Pygame module is used to create the testing interface. Serial module is used for communication with the controller. Designed for the following configuration: Arduino Nano, four Nema 17 (17HS4401) stepper motors, four A4988 drivers. However, it can also be used with different models of Arduino or stepper motors (check out the installation instructions). 
 
 # Installation
 0) Check if you have python modules installed: serial, pygame, numpy
