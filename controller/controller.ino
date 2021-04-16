@@ -1,12 +1,12 @@
 String test;
 const int dirPin1 = 4;
-const int stepPin1 = 5;
-const int dirPin2 = 6;
-const int stepPin2 = 7;
+const int stepPin1 = 5;//Pwm pins are 3, 5, 6, 9, 10, 11
+const int dirPin2 = 7;
+const int stepPin2 = 6;
 const int dirPin3 = 8;
 const int stepPin3 = 9;
 const int dirPin4 = 10;
-const int stepPin5 = 11;
+const int stepPin4 = 11;
 const int stepsPerRevolution = 200;
 const int stepWidthmax = 4000;
 const int stepWidthmin = 300;
@@ -15,8 +15,14 @@ int stepWidth = (stepWidthmax+stepWidthmin)/2; //between 300 and 4000
 void setup()
 {
   Serial.begin(28800);
-  pinMode(stepPin, OUTPUT);
-  pinMode(dirPin, OUTPUT);
+  pinMode(stepPin1, OUTPUT);
+  pinMode(dirPin1, OUTPUT);
+  pinMode(stepPin2, OUTPUT);
+  pinMode(dirPin2, OUTPUT);
+  pinMode(stepPin3, OUTPUT);
+  pinMode(dirPin3, OUTPUT);
+  pinMode(stepPin4, OUTPUT);
+  pinMode(dirPin4, OUTPUT);
 }
 
 void loop() {
@@ -24,12 +30,12 @@ if (Serial.available() > 0) {
   test = Serial.readStringUntil('\n');
   
   if (test == "1") {
-    digitalWrite(dirPin, HIGH); // Right only
+    digitalWrite(dirPin1, HIGH); // Right only
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
-      digitalWrite(stepPin, HIGH);
+      digitalWrite(stepPin1, HIGH);
       delayMicroseconds(stepWidth);
-      digitalWrite(stepPin, LOW);
+      digitalWrite(stepPin1, LOW);
       delayMicroseconds(stepWidth);
       if (Serial.available() > 0) {
         test = Serial.readStringUntil('\n'); //READING TAKES SOME TIME AND PWM IS NOT THAT NICE BECAUSE OF THAT
@@ -40,12 +46,12 @@ if (Serial.available() > 0) {
     }
   }
   if (test == "2") {
-    digitalWrite(dirPin, LOW); // Left only
+    digitalWrite(dirPin1, LOW); // Left only
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
-      digitalWrite(stepPin, HIGH);
+      digitalWrite(stepPin1, HIGH);
       delayMicroseconds(stepWidth);
-      digitalWrite(stepPin, LOW);
+      digitalWrite(stepPin1, LOW);
       delayMicroseconds(stepWidth);
       if (Serial.available() > 0) {
         test = Serial.readStringUntil('\n');
@@ -56,12 +62,15 @@ if (Serial.available() > 0) {
     }
   }
   if (test == "3") {
-    digitalWrite(dirPin, LOW); // up only
+    digitalWrite(dirPin2, HIGH); // up only
+    digitalWrite(dirPin3, HIGH);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
-      digitalWrite(stepPin, HIGH);
+      digitalWrite(stepPin2, HIGH);
+      digitalWrite(stepPin3, HIGH);
       delayMicroseconds(stepWidth);
-      digitalWrite(stepPin, LOW);
+      digitalWrite(stepPin2, LOW);
+      digitalWrite(stepPin3, LOW);
       delayMicroseconds(stepWidth);
       if (Serial.available() > 0) {
         test = Serial.readStringUntil('\n');
@@ -72,12 +81,15 @@ if (Serial.available() > 0) {
     }
   }
   if (test == "4") {
-    digitalWrite(dirPin, LOW); // down only
+    digitalWrite(dirPin2, LOW); // down only
+    digitalWrite(dirPin3, LOW);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
-      digitalWrite(stepPin, HIGH);
+      digitalWrite(stepPin2, HIGH);
+      digitalWrite(stepPin3, HIGH);
       delayMicroseconds(stepWidth);
-      digitalWrite(stepPin, LOW);
+      digitalWrite(stepPin2, LOW);
+      digitalWrite(stepPin3, LOW);
       delayMicroseconds(stepWidth);
       if (Serial.available() > 0) {
         test = Serial.readStringUntil('\n');
@@ -88,12 +100,18 @@ if (Serial.available() > 0) {
     }
   }
   if (test == "5") {
-    digitalWrite(dirPin, LOW); // Right and up
+    digitalWrite(dirPin2, HIGH); // Right and up
+    digitalWrite(dirPin3, HIGH);
+    digitalWrite(dirPin1, HIGH);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
-      digitalWrite(stepPin, HIGH);
+      digitalWrite(stepPin1, HIGH);
+      digitalWrite(stepPin2, HIGH);
+      digitalWrite(stepPin3, HIGH);
       delayMicroseconds(stepWidth);
-      digitalWrite(stepPin, LOW);
+      digitalWrite(stepPin1, LOW);
+      digitalWrite(stepPin2, LOW);
+      digitalWrite(stepPin3, LOW);
       delayMicroseconds(stepWidth);
       if (Serial.available() > 0) {
         test = Serial.readStringUntil('\n');
@@ -104,12 +122,18 @@ if (Serial.available() > 0) {
     }
   }
   if (test == "6") {
-    digitalWrite(dirPin, LOW); // Right and down
+    digitalWrite(dirPin2, LOW); // Right and down
+    digitalWrite(dirPin3, LOW);
+    digitalWrite(dirPin1, HIGH);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
-      digitalWrite(stepPin, HIGH);
+      digitalWrite(stepPin1, HIGH);
+      digitalWrite(stepPin2, HIGH);
+      digitalWrite(stepPin3, HIGH);
       delayMicroseconds(stepWidth);
-      digitalWrite(stepPin, LOW);
+      digitalWrite(stepPin1, LOW);
+      digitalWrite(stepPin2, LOW);
+      digitalWrite(stepPin3, LOW);
       delayMicroseconds(stepWidth);
       if (Serial.available() > 0) {
         test = Serial.readStringUntil('\n');
@@ -120,12 +144,18 @@ if (Serial.available() > 0) {
     }
   }
   if (test == "7") {
-    digitalWrite(dirPin, LOW); // Left and up
+    digitalWrite(dirPin2, HIGH); // Left and up
+    digitalWrite(dirPin3, HIGH);
+    digitalWrite(dirPin1, LOW);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
-      digitalWrite(stepPin, HIGH);
+      digitalWrite(stepPin1, HIGH);
+      digitalWrite(stepPin2, HIGH);
+      digitalWrite(stepPin3, HIGH);
       delayMicroseconds(stepWidth);
-      digitalWrite(stepPin, LOW);
+      digitalWrite(stepPin1, LOW);
+      digitalWrite(stepPin2, LOW);
+      digitalWrite(stepPin3, LOW);
       delayMicroseconds(stepWidth);
       if (Serial.available() > 0) {
         test = Serial.readStringUntil('\n');
@@ -136,12 +166,18 @@ if (Serial.available() > 0) {
     }
   }
   if (test == "8") {
-    digitalWrite(dirPin, LOW); // Left and down
+    digitalWrite(dirPin2, LOW); // Left and down
+    digitalWrite(dirPin3, LOW);
+    digitalWrite(dirPin1, LOW);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
-      digitalWrite(stepPin, HIGH);
+      digitalWrite(stepPin1, HIGH);
+      digitalWrite(stepPin2, HIGH);
+      digitalWrite(stepPin3, HIGH);
       delayMicroseconds(stepWidth);
-      digitalWrite(stepPin, LOW);
+      digitalWrite(stepPin1, LOW);
+      digitalWrite(stepPin2, LOW);
+      digitalWrite(stepPin3, LOW);
       delayMicroseconds(stepWidth);
       if (Serial.available() > 0) {
         test = Serial.readStringUntil('\n');
