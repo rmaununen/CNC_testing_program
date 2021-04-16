@@ -2,8 +2,11 @@ import pygame
 import serial
 import time
 import numpy as np
+####################### SETUP SPECIFIC VALUES:
 serialcom = serial.Serial('/dev/cu.usbserial-A50285BI', baudrate=28800, timeout=1) #Change port name to the one you are using
-
+min_pulse_width = 300 #[us]
+max_pulse_width = 4000 #[us]
+steps_per_rev = 200
 
 ####################### INITIAL VALUES:
 x = 320
@@ -11,8 +14,6 @@ y = 320
 FPS = 30
 speed_h = 6
 speed_v = 6
-motor_speed = 1
-delta_motor_speed = 0.01
 r = 5
 r1 = 9
 down = False
@@ -38,6 +39,12 @@ pygame.display.set_caption("CNC control testing")
 #pl_stand = pygame.image.load("images/bg_lvl1.jpg")
 ####################### FUNCTIONS:
 
+#Initial calculations
+min_rot_speed = (1/(2*max_pulse_width*(10**(-6))))/200 #[rps]
+max_rot_speed = (1/(2*min_pulse_width*(10**(-6))))/200 #[rps]
+motor_speed = round(((max_rot_speed-min_rot_speed)/2), 2) #Initial value for speed, [rps]
+delta_motor_speed = 0.03
+
 #FUNCTION THAT PRINTS TEXT
 def print_text(message, x, y, font_col, font_type, font_size):
     pygame.display.init()
@@ -52,14 +59,24 @@ def draw_button(direction, xb, yb):
     height = 20
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
+
     if (xb < mouse[0] < xb + width) and (yb < mouse[1] < yb + height):
         pygame.draw.rect(win, (210, 160, 160), (xb, yb, width, height))
-        if click[0] == 1:
+        if click[0] == 1 and not moving:
+            serialcom.write("10\n".encode())
             pygame.time.delay(30)
-            if direction == 'plus':
+            if direction == 'plus' and motor_speed<max_rot_speed:
                 motor_speed += delta_motor_speed
-            else:
+                pulse_width_string = str(round((10**6)*(1/(200*motor_speed))/2))+'\n'
+                serialcom.write(pulse_width_string.encode())
+                pygame.time.delay(30)
+                serialcom.write("11\n".encode())
+            elif direction != 'plus' and motor_speed>min_rot_speed:
                 motor_speed -= delta_motor_speed
+                pulse_width_string = str(round((10**6)*(1/(200*motor_speed))/2))+'\n'
+                serialcom.write(pulse_width_string.encode())
+                pygame.time.delay(30)
+                serialcom.write("11\n".encode())
     else:
         pygame.draw.rect(win, (160, 160, 160), (xb, yb, width, height))
     if direction == 'plus':
@@ -155,16 +172,34 @@ while run == True:
             moving = True
             move_right = True
             serialcom.write("1\n".encode())
-        else:
-            serialcom.write("0\n".encode())
+
         if pressed[pygame.K_UP] and y>=round(screen_height/10)+r+speed_v:
             y-= speed_v
             moving = True
             move_up = True
+            serialcom.write("5\n".encode())
         elif pressed[pygame.K_DOWN] and y<round((screen_height/10) + np.sqrt(2)*round(screen_width/2))-r-speed_v:
             y+= speed_v
             moving = True
             move_down = True
+            serialcom.write("4\n".encode())
+        #Determining the mode
+        if move_right and not (move_up or move_down):
+            serialcom.write("1\n".encode())
+        elif move_left and not (move_up or move_down):
+            serialcom.write("2\n".encode())
+        elif move_up and not (move_right or move_left):
+            serialcom.write("3\n".encode())
+        elif move_down and not (move_right or move_left):
+            serialcom.write("4\n".encode())
+        elif move_right and move_up:
+            serialcom.write("5\n".encode())
+        elif move_right and move_down:
+            serialcom.write("6\n".encode())
+        elif move_left and move_up:
+            serialcom.write("7\n".encode())
+        elif move_left and move_down:
+            serialcom.write("8\n".encode())
 
         if moving:
             single_point_done = False
@@ -198,7 +233,7 @@ while run == True:
     #########################################
     # CALLING THE DRAWER TO DRAW A FRAME
     draw_background(0)
-    # ПCHECK FOR GAME QUIT
+    # CHECK FOR GAME QUIT
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
