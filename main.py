@@ -2,13 +2,13 @@ import pygame
 import serial
 import time
 import numpy as np
-####################### SETUP SPECIFIC VALUES:
+#SETUP-SPECIFIC VALUES:
 serialcom = serial.Serial('/dev/cu.usbserial-A50285BI', baudrate=28800, timeout=1) #Change port name to the one you are using
 min_pulse_width = 300 #[us]
 max_pulse_width = 4000 #[us]
 steps_per_rev = 200
 
-####################### INITIAL VALUES:
+#INITIAL VALUES:
 x = 320
 y = 320
 FPS = 30
@@ -35,9 +35,6 @@ t = pygame.time.Clock()
 pygame.init()
 win = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("CNC control testing")
-#bg1 = pygame.image.load("images/bg_lvl1.jpg")
-#pl_stand = pygame.image.load("images/bg_lvl1.jpg")
-####################### FUNCTIONS:
 
 #Initial calculations
 min_rot_speed = (1/(2*max_pulse_width*(10**(-6))))/200 #[rps]
@@ -139,8 +136,6 @@ def draw_background(image):
     else:
         pygame.draw.circle(win, (180, 180, 240), (round(3*screen_width/4), round(0.89*screen_height)), r1)
         pygame.draw.circle(win, (180, 180, 240), (round(3*screen_width/4)+round(screen_width/7), round(0.89 * screen_height)), r1)
-    #win.blit(bg, (0, 0))
-    #win.blit(pl_stand, (x, y))
     print_text('Motor speed [rps]', round(0.56 * screen_width), round(0.4 * screen_height), (0, 0, 0), "fonts/Roboto.ttf", 20)
     draw_button('plus', round(0.95*screen_width), round(0.4*screen_height))
     draw_button('minus', round(0.8*screen_width), round(0.4*screen_height))
@@ -236,7 +231,7 @@ while run == True:
     #########################################
     # CALLING THE DRAWER TO DRAW A FRAME
     draw_background(0)
-    # CHECK FOR GAME QUIT
+    # CHECK FOR QUIT
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
