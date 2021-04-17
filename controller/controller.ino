@@ -187,6 +187,26 @@ if (Serial.available() > 0) {
         }
     }
   }
+  if (test == "12") {
+    digitalWrite(dirPin4, HIGH); // Right only
+    for(int x = 0; x < 1*stepsPerRevolution; x++)
+    {
+      digitalWrite(stepPin4, HIGH);
+      delayMicroseconds(stepWidth);
+      digitalWrite(stepPin4, LOW);
+      delayMicroseconds(stepWidth);
+    }
+  }
+  if (test == "13") {
+    digitalWrite(dirPin4, LOW); // Right only
+    for(int x = 0; x < 1*stepsPerRevolution; x++)
+    {
+      digitalWrite(stepPin4, HIGH);
+      delayMicroseconds(stepWidth);
+      digitalWrite(stepPin4, LOW);
+      delayMicroseconds(stepWidth);
+    }
+  }
   if (test == "10") {
     change_step_width();
   }

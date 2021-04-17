@@ -166,23 +166,20 @@ while run == True:
             x-= speed_h
             moving = True
             move_left = True
-            serialcom.write("2\n".encode())
         elif pressed[pygame.K_RIGHT] and x<=round(screen_width/20 + screen_width/2)-r-speed_h:
             x+= speed_h
             moving = True
             move_right = True
-            serialcom.write("1\n".encode())
 
         if pressed[pygame.K_UP] and y>=round(screen_height/10)+r+speed_v:
             y-= speed_v
             moving = True
             move_up = True
-            serialcom.write("5\n".encode())
         elif pressed[pygame.K_DOWN] and y<round((screen_height/10) + np.sqrt(2)*round(screen_width/2))-r-speed_v:
             y+= speed_v
             moving = True
             move_down = True
-            serialcom.write("4\n".encode())
+
         #Determining the mode
         if move_right and not (move_up or move_down):
             serialcom.write("1\n".encode())
@@ -200,14 +197,20 @@ while run == True:
             serialcom.write("7\n".encode())
         elif move_left and move_down:
             serialcom.write("8\n".encode())
+        else:
+            serialcom.write("0\n".encode())
 
         if moving:
             single_point_done = False
         if pressed[pygame.K_SPACE] and not pressed_space:
             if down == True:
                 down = False
+                serialcom.write("12\n".encode())
+                pygame.time.delay(1000)
             else:
                 down = True
+                serialcom.write("13\n".encode())
+                pygame.time.delay(1000)
             pressed_space = True
         if not pressed[pygame.K_SPACE]:
             pressed_space = False
