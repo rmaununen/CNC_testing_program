@@ -63,7 +63,7 @@ if (Serial.available() > 0) {
   }
   if (test == "3") {
     digitalWrite(dirPin2, HIGH); // up only
-    digitalWrite(dirPin3, HIGH);
+    digitalWrite(dirPin3, LOW);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
       digitalWrite(stepPin2, HIGH);
@@ -82,7 +82,7 @@ if (Serial.available() > 0) {
   }
   if (test == "4") {
     digitalWrite(dirPin2, LOW); // down only
-    digitalWrite(dirPin3, LOW);
+    digitalWrite(dirPin3, HIGH);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
       digitalWrite(stepPin2, HIGH);
@@ -101,7 +101,7 @@ if (Serial.available() > 0) {
   }
   if (test == "5") {
     digitalWrite(dirPin2, HIGH); // Right and up
-    digitalWrite(dirPin3, HIGH);
+    digitalWrite(dirPin3, LOW);
     digitalWrite(dirPin1, HIGH);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
@@ -123,7 +123,7 @@ if (Serial.available() > 0) {
   }
   if (test == "6") {
     digitalWrite(dirPin2, LOW); // Right and down
-    digitalWrite(dirPin3, LOW);
+    digitalWrite(dirPin3, HIGH);
     digitalWrite(dirPin1, HIGH);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
@@ -145,7 +145,7 @@ if (Serial.available() > 0) {
   }
   if (test == "7") {
     digitalWrite(dirPin2, HIGH); // Left and up
-    digitalWrite(dirPin3, HIGH);
+    digitalWrite(dirPin3, LOW);
     digitalWrite(dirPin1, LOW);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
@@ -167,7 +167,7 @@ if (Serial.available() > 0) {
   }
   if (test == "8") {
     digitalWrite(dirPin2, LOW); // Left and down
-    digitalWrite(dirPin3, LOW);
+    digitalWrite(dirPin3, HIGH);
     digitalWrite(dirPin1, LOW);
     for(int x = 0; x < 100*stepsPerRevolution; x++)
     {
@@ -188,7 +188,7 @@ if (Serial.available() > 0) {
     }
   }
   if (test == "12") {
-    digitalWrite(dirPin4, HIGH); // Right only
+    digitalWrite(dirPin4, HIGH); // Contact up
     for(int x = 0; x < 1*stepsPerRevolution; x++)
     {
       digitalWrite(stepPin4, HIGH);
@@ -198,7 +198,7 @@ if (Serial.available() > 0) {
     }
   }
   if (test == "13") {
-    digitalWrite(dirPin4, LOW); // Right only
+    digitalWrite(dirPin4, LOW); // Contact down
     for(int x = 0; x < 1*stepsPerRevolution; x++)
     {
       digitalWrite(stepPin4, HIGH);

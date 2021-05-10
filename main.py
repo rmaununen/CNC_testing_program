@@ -115,8 +115,8 @@ def draw_background(image):
     if move_up:
         pygame.draw.circle(win, (180, 180, 240), (round(3*screen_width/4), round(0.71*screen_height)), r1)
         pygame.draw.circle(win, (0, 0, 230), (round(3*screen_width/4)+round(screen_width/7), round(0.71 * screen_height)), r1)
-        pygame.draw.circle(win, (180, 180, 240), (round(3*screen_width/4), round(0.8*screen_height)), r1)
-        pygame.draw.circle(win, (0, 0, 230), (round(3*screen_width/4)+round(screen_width/7), round(0.8 * screen_height)), r1)
+        pygame.draw.circle(win, (180, 180, 240), (round(3*screen_width/4)+round(screen_width/7), round(0.8*screen_height)), r1)
+        pygame.draw.circle(win, (0, 0, 230), (round(3*screen_width/4), round(0.8 * screen_height)), r1)
     elif move_down:
         pygame.draw.circle(win, (0, 0, 230), (round(3*screen_width/4), round(0.71*screen_height)), r1)
         pygame.draw.circle(win, (180, 180, 240), (round(3*screen_width/4)+round(screen_width/7), round(0.71 * screen_height)), r1)
